@@ -1,0 +1,13 @@
+1. Using C++ features as much as possible appropriately.
+2. Respecting indentation rules:
+    1. Every function/class/structure should be separated with a line
+    2. Every namespace/typedef should be separated with a line
+    3. Integral types may have no indention among themselves, but should have indention in general.
+    4. Each nested structures should have indentation(1 tab=4 spaces)
+3. Variable, function, class etc. names should be chosen wisely:
+    1. Each name should contain/have very brief information about itself or what it is used for
+    2. Every name should have the sign of "_" as separator(for example, int nb_params;)
+4. Every and each written code has to be reviewed by both of the participants!
+5. Each participant should be capable of manipulate the other's codes easily.
+6. Each participant should suggest at least one of his better solutions to ease the other's work.
+7. Either of participants has to work on his part of code at least 3 times in a week with completing at least one of his tasks.

@@ -1,0 +1,50 @@
+[C] - class
+[L] - linked
+[U] - updated
+[D] - detailed test/debug options
+MT - main test
+
+"Folder"::"file":"specific part of the file"
+
+<U> - Ugur's responsibility to finish
+<A> - Ali's responsibility to finish
+<AU> - Ali and Ugur's responsibility to finish
+<[U]> - Ugur's code review or suggestions
+<A[U]> Ali's responsibility to finish with Ugur's suggestions
+
+Project plan over files:
+    1. User_Interface::
+            <A[U]>
+        1.reader:iaos
+        2.[C]iaos preparation
+        3.data_transaction:iaos
+        4.[D]iaos
+        5.MT
+            <AU>
+        6.reader:function
+        7.[C]function preparation
+        8.data_transaction:function
+        9.[D]function
+        10.MT
+            <A>
+        11.[L]reader in a complete version
+        12.[C]User_Interface preparation
+            <U>
+        13.[L]class hierarchy preparation
+        14.[U]data_transaction:iaos
+        15.[U]data_transaction:function
+        16.MT
+            <A>
+        17.[L]transaction in a complete version
+        18.[U]class hierarchy in a complete version
+        19.MT
+            <U[A]>
+        20.[U][C]User_Interface in a complete version
+        21.Error-handling overlook
+        22.[D][C]all existing classes
+        23.MT
+    2. Transaction_Unit::
+        1.
+    3. Proc_Unit::
+        1.
+End of the project.
