@@ -11,3 +11,4 @@
 5. Each participant should be capable of manipulate the other's codes easily.
 6. Each participant should suggest at least one of his better solutions to ease the other's work.
 7. Either of participants has to work on his part of code at least 3 times in a week with completing at least one of his tasks.
+8. Every file(mainly .cpp or .hpp) has to have comments about its functions(if necessary classes/structures) right below the appropriate functions and every file has to contain comment in the top of it explaining the general idea of the file clearly and briefly.
