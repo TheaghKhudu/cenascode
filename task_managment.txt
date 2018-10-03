@@ -44,7 +44,13 @@ Project plan over files:
         22.[D][C]all existing classes
         23.MT
     2. Transaction_Unit::
-        1.
+           <A[U]>
+        1.reader:iaos
+        2.[C]iaos preparation
+        3.data_transaction:iaos
+        4.[D]iaos
+        5.MT
+          <AU>
     3. Proc_Unit::
         1.
 End of the project.
