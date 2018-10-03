@@ -44,13 +44,17 @@ Project plan over files:
         22.[D][C]all existing classes
         23.MT
     2. Transaction_Unit::
-           <A[U]>
-        1.reader:iaos
-        2.[C]iaos preparation
-        3.data_transaction:iaos
-        4.[D]iaos
-        5.MT
-          <AU>
+           <A>
+        1.[C]operation/function preparation
+        2.User-dependent basic initializers
+        3.Error handling
+        4.MT
+          <U>
+        5.[C]operation/iaos preparation
+        6.Non-dependent basic initializers
+        7.Error handling
+        8.MT
+        
     3. Proc_Unit::
         1.
 End of the project.
