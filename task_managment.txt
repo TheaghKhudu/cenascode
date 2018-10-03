@@ -54,6 +54,9 @@ Project plan over files:
         6.Non-dependent basic initializers
         7.Error handling
         8.MT
+        9.
+          <AU>
+        10.[C]function solver methods
         
     3. Proc_Unit::
         1.
