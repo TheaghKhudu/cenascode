@@ -10,7 +10,8 @@ MT - main test
 <A> - Ali's responsibility to finish
 <AU> - Ali and Ugur's responsibility to finish
 <[U]> - Ugur's code review or suggestions
-<A[U]> Ali's responsibility to finish with Ugur's suggestions
+<A[U]> - Ali's responsibility to finish with Ugur's suggestions
+<A>>U> - Ugur's code optimizations which has been written by Ali
 
 Project plan over files:
     1. User_Interface::
