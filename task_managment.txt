@@ -3,6 +3,8 @@
 [U] - updated
 [D] - detailed test/debug options
 MT - main test
+GT - general test
+FT- final test
 
 "Folder"::"file":"specific part of the file"
 
