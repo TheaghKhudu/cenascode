@@ -12,3 +12,7 @@
 6. Each participant should suggest at least one of his better solutions to ease the other's work.
 7. Either of participants has to work on his part of code at least 3 times in a week with completing at least one of his tasks.
 8. Every file(mainly .cpp or .hpp) has to have comments about its functions(if necessary classes/structures) right below the appropriate functions and every file has to contain comment in the top of it explaining the general idea of the file clearly and briefly.
+9. All files should be grouped in SRCS, LBRS, OBJS etc. folders appropriately after being completed or being ready to get used.
+Data structures should be used to contain data and its functions which we are working on, and classes should be used to contain data and its functions which we are working with. So, basically, structures are to contain main or primary data while classes are to contain secondary data.
+10. Memory and function managment should be clear and hardly destructible even if new lines codes are written later on(as a new update or something).
+Data structures should be structered based on what they work on, and classes should be structured based on how they work.
