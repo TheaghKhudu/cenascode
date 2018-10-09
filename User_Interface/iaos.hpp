@@ -4,9 +4,13 @@ IaOS library with default mathematical operations.
 Contains static (and const) operations and static information about them since they are not changable.
 High functionality with full of various "smart" functions.
 
-V1.1 /
+V1.1 /09.10.2018
 Updated:
-    -
+    -useless functions reduction
+    -bugs fixed
+    -function optimization
+    -goto statement reduction
+    -memory optimization
 */
 
 #include<cmath>
@@ -56,17 +60,12 @@ typedef struct EXPRESSION_LIST{
     unsigned* split(unsigned opr_index, unsigned opr_pos);
     unsigned cp_pos(unsigned op_pos);
     void set_list(long double value, unsigned position, unsigned priority, unsigned index, EXPRESSION_LIST* next);
-    void set_value(long double value);      //unn
-    void set_position(unsigned position);   //unn
-    void set_priority(unsigned priority);   //unn
-    void set_index(unsigned index);         //unn
-    void set_next(EXPRESSION_LIST* node);
     long double get_value();
     unsigned get_index();
     unsigned get_position();
     unsigned get_priority();
     EXPRESSION_LIST* get_next();
-    void delete_node();                     //unwritten
+    static void delete_list(EXPRESSION_LIST* beg, EXPRESSION_LIST* end);
     void debug_print();
 }Expression_List;
 
@@ -95,9 +94,9 @@ namespace Math{
 
 class Calculator{
     private:
-    Expression_List list;    //
-    std::string expr;        //holds mathematical expression
-    unsigned size;           //holds the size of expr
+    Expression_List list;           //
+    std::string expr;               //holds mathematical expression
+    unsigned size;                  //holds the size of expr
 
     public:
     Calculator(){}
@@ -123,14 +122,14 @@ class Calculator{
     //second, tests if all terms in the expression are in the right mathematical order
     //finally, gives "true" if passes through first 2 sub-tests succesfully, and "false" otherwise
 
-    long double calculate() const;
+    long double calculate();
     //after getting "true" from MeMeo_test this function treats the expression as a mathematical expression
     //and then calculates the expression, returns the final result of calculation
 
     long double single_opr_calc(unsigned* pos, unsigned opr_index);
     //solves the expression containing only and only single operation
 
-    unsigned* get_soe(unsigned beg_pos);
+    void get_soe(unsigned beg_pos);
     //recursive function which gets either the beginning and end postions of single operational expression
     //or the final result itself and storing it in the first element of its array(which has only 2 elements)
 

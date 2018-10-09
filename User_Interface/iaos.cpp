@@ -3,6 +3,11 @@ Small transaction unit between the user and data holders to restore the user's i
 Static mathematical operations/functions are used to define basic operations.
 Contains calculator which is capable of evaluating the expression.
 Upgraded with lots of new high functionalities which helps to solve complex problems.
+
+V1.1 /09.10.2018
+Updated:
+    -better interaction with float numbers
+    -bugs fixed
 */
 
 #include<cstdlib>
@@ -133,7 +138,6 @@ unsigned* Expression_List::split(unsigned opr_index, unsigned opr_pos){
 unsigned Expression_List::cp_pos(unsigned op_pos){
     Expression_List* node=this;
     for(unsigned i=0;i<=op_pos;++i){ node=node->next; }
-    //std::cout<<"Node index : "<<node->index<<'\n';
     unsigned counter=1;
     for(;node->next!=nullptr;node=node->next){
         if(node->index==0){ ++counter; }
@@ -147,16 +151,6 @@ void Expression_List::set_list(long double value, unsigned position, unsigned pr
     this->value=value;  this->position=position; this->priority=priority;   this->index=index; this->next=next;
 }
 
-void Expression_List::set_value(long double value){ this->value=value; }
-
-void Expression_List::set_position(unsigned position){ this->position=position; }
-
-void Expression_List::set_priority(unsigned priority){ this->priority=priority; }
-
-void Expression_List::set_index(unsigned index){ this->index=index; }
-
-void Expression_List::set_next(Expression_List* node){ this->next=node; }
-
 long double Expression_List::get_value(){ return this->value; }
 
 unsigned Expression_List::get_index(){ return this->index; }
@@ -167,9 +161,21 @@ unsigned Expression_List::get_priority(){ return this->priority; }
 
 Expression_List* Expression_List::get_next(){ return this->next; }
 
+void Expression_List::delete_list(EXPRESSION_LIST* beg, EXPRESSION_LIST* end){
+    Expression_List* tmp=beg;
+
+    if(tmp!=nullptr){ for(beg;beg!=end;beg=beg->next){ tmp=beg; delete tmp; } }
+
+    /*
+        tmp=beg
+        beg=beg->next
+        free(tmp);
+    */
+}
+
 void Expression_List::debug_print(){
     std::cout<<"_________\n";
-    std::cout<<"Debug List Print:\n";
+    std::cout<<"Debug Print of List :\n";
     std::cout<<"Value : "<<this->value<<'\n';
     std::cout<<"Position : "<<this->position<<'\n';
     std::cout<<"Index : "<<this->index<<'\n';
@@ -181,6 +187,7 @@ void Expression_List::manage_list(long double value, unsigned beg_pos, unsigned 
     Expression_List* end=this;
     for(unsigned i=0;i<beg_pos;++i){ beg=beg->next; end=end->next; }
     for(unsigned i=beg_pos;i<=end_pos;++i){ end=end->next; }
+    Expression_List::delete_list(beg->next,end);
     beg->set_list(value,beg_pos,0,22,end);
     for(unsigned diff=end_pos-beg_pos;end!=nullptr;end=end->next){
         end->position-=diff;
@@ -268,12 +275,10 @@ void Calculator::init_list(const std::string& expr){
     unsigned index=0, length=0, position=0, priority=0;
     long double value=0;
     bool pass=true;
-    //std::cout<<"init_list activated!\n";
     for(unsigned it=0;it<size;){
         length=Operation::is_opr(&expr[it],size-it);
         index=Operation::get_index(expr.substr(it,length));
         priority=Operation::get_priority(index);
-        //std::cout<<"index : "<<index<<", length : "<<length<<", priority : "<<priority<<'\n';
         if(index==22 && pass){
             value=atof(&expr[it]);
             list->set_list(value,position,priority,index,Expression_List::create_node());
@@ -288,27 +293,23 @@ void Calculator::init_list(const std::string& expr){
             it+=(length-1);
         }
         ++it;
-        if(it>=size){ list=nullptr; }
+        if(it>=size){ delete list; }
     }
-    //std::cout<<"init_list deactivated!\n";
 }
 
 Expression_List* Calculator::get_list(){ return &list; }
 
-std::string Calculator::get_expr() const{
-    return expr;
-}
+std::string Calculator::get_expr() const{ return expr; }
 
 bool Calculator::MeMeo_test() const{
-    //std::cout<<"MeMeo activated.\n";
     unsigned length=Operation::is_opr(expr,size), opr_index=0, index=0;
     unsigned counter=0;
     if(length==0){ return false; }
     for(unsigned it=0;it<size;){
         if(it==0 && 
           (expr[0]==')' || expr[0]=='^' || expr[0]=='!' || 
-           expr[0]=='%' || expr[0]=='*' || expr[0]=='/')){ return false; }
-        if(it==0 && (expr[size-1]!=')' && !std::isdigit(expr[size-1]))){ return false; }
+           expr[0]=='%' || expr[0]=='*' || expr[0]=='/' ||
+           (expr[size-1]!=')' && expr[size-1]!='!' && !std::isdigit(expr[size-1])))){ return false; }
         opr_index=Operation::get_index(expr.substr(it,length));
         it+=length;
         if(opr_index==0){ ++counter; } else if(opr_index==1){ --counter; }
@@ -320,8 +321,10 @@ bool Calculator::MeMeo_test() const{
     return true;
 }
 
-long double Calculator::calculate() const{
-    //incompleted
+long double Calculator::calculate(){
+    this->init_list(expr);
+    this->get_soe(0);
+    return this->list.get_value();
 }
 
 long double Calculator::single_opr_calc(unsigned* pos, unsigned opr_pos){
@@ -349,48 +352,29 @@ long double Calculator::single_opr_calc(unsigned* pos, unsigned opr_pos){
     }
 }
 
-unsigned* Calculator::get_soe(unsigned beg_pos){
-    //incompleted
+void Calculator::get_soe(unsigned beg_pos){
     Expression_List* List=this->get_list();
     Expression_List* node=List;
-    static unsigned beg=0, *beg_end=new unsigned[2]{0,0}, opr_index=0; int pos=0;
-    beg_end[0]=beg_end[1]=0;    bool pass=false;
-    GET:
-    node=List;
-    long double elem=0;
-    for(unsigned pr=6;pr>0;--pr){
-        //std::cout<<"Get Result activated with beg value : "<<beg_end[0]<<"\n";
-        if((pos=List->search_position(pr,beg_end[0]))==-1){ /*std::cout<<pr<<" couldnt find\n";*/ continue; }
-        //std::cout<<"Found pr : "<<pr<<", with pos : "<<pos<<", curr node val : "<<node->get_value()<<std::endl;
-        node=List;
-        for(int i=0;i<pos;++i){ node=node->get_next(); }
-        //std::cout<<"opr index : "<<node->get_index()<<", curr value : "<<node->get_value()<<'\n';
-        beg_end=List->split(node->get_index(),pos);
-        //std::cout<<"Beg pos : "<<beg_end[0]<<", End pos : "<<beg_end[1]<<'\n';
-        if(beg_end[1]-beg_end[0]<=2){
-            //std::cout<<"List manager activated";
-            elem=single_opr_calc(beg_end,pos);
-            //std::cout<<" with elem : "<<elem<<'\n';
-            //std::cout<<"\t beg : "<<beg_end[0]<<", end : "<<beg_end[1]<<'\n';
-            List->manage_list(elem,beg_end[0],beg_end[1]);
-            //std::cout<<"Managed perfectly!\n";
-
-            //for(Expression_List* flist=List;flist->get_next()!=nullptr;flist=flist->get_next()){
-            //    std::cout<<"Value : "<<flist->get_value()<<'\n';
-            //    std::cout<<"Position : "<<flist->get_position()<<'\n';
-            //    std::cout<<"Index : "<<flist->get_index()<<'\n';
-            //    std::cout<<"Priority : "<<flist->get_priority()<<'\n';
-            //    std::cout<<"\n";
-            //}
-            //std::cout<<"Debugging print ended!\n";
-            beg_end[0]=0;
-            ++pr; if(pass){ pr=7; } pass=false;
-        } else{
-            /*std::cout<<"\n\n\tGOTO\n\n";*/ pass=true;
-            //std::cout<<"calling again with beg : "<<beg_end[0]+1<<'\n';
-            beg_end[0]++; goto GET; //get_soe(beg_end[0]+1,0);
+    unsigned beg=0, *beg_end=&beg/*new unsigned[2]{0,0}*/, opr_index=0, pr=6;
+    int pos=0;    bool pass=false;    long double elem=0;
+    beg_end[0]=0;
+    while(pr!=0){
+        elem=0;
+        for(pr=6;pr>0;--pr){
+            if((pos=List->search_position(pr,beg_end[0]))==-1){ continue; }
+            node=List;
+            for(int i=0;i<pos;++i){ node=node->get_next(); }
+            beg_end=List->split(node->get_index(),pos);
+            if(beg_end[1]-beg_end[0]<=2){
+                elem=single_opr_calc(beg_end,pos);
+                List->manage_list(elem,beg_end[0],beg_end[1]);
+                beg_end[0]=0;
+                ++pr; if(pass){ pr=7; } pass=false;
+            } else{
+                pass=true;
+                beg_end[0]++; break;
+            }
         }
-        //std::cout<<"End\n";
     }
 }
 
