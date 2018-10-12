@@ -8,6 +8,14 @@ V1.1 /09.10.2018
 Updated:
     -better interaction with float numbers
     -bugs fixed
+
+V1.2 /13.10.2018
+Updated:
+    -function usage optimization
+    -factorial bug fixed (0!=1)
+    -pre-addition/subtraction inside parantheses bug fixed ((+1)=1, (-1)=-1)
+    -first coming pre-addition/subtraction bug fixed (+1=1, -1=-1)
+    -exceptional cases completed + new factorial exception added
 */
 
 #include<cstdlib>
@@ -126,7 +134,7 @@ unsigned* Expression_List::split(unsigned opr_index, unsigned opr_pos){
               opr_index==Operation::get_index("/") ||
               opr_index==Operation::get_index("+") ||
               opr_index==Operation::get_index("-")){
-        beg_end[0]=opr_pos-1;
+        beg_end[0]=(opr_pos>0)? opr_pos-1 : 0;
         beg_end[1]=opr_pos+1;
     } else{
         beg_end[0]=opr_pos;
@@ -144,7 +152,6 @@ unsigned Expression_List::cp_pos(unsigned op_pos){
         else if(node->index==1){ --counter; }
         if(counter==0){ return node->position; }
     }
-    //return node->position;
 }
 
 void Expression_List::set_list(long double value, unsigned position, unsigned priority, unsigned index, EXPRESSION_LIST* next){
@@ -163,14 +170,7 @@ Expression_List* Expression_List::get_next(){ return this->next; }
 
 void Expression_List::delete_list(EXPRESSION_LIST* beg, EXPRESSION_LIST* end){
     Expression_List* tmp=beg;
-
     if(tmp!=nullptr){ for(beg;beg!=end;beg=beg->next){ tmp=beg; delete tmp; } }
-
-    /*
-        tmp=beg
-        beg=beg->next
-        free(tmp);
-    */
 }
 
 void Expression_List::debug_print(){
@@ -179,7 +179,7 @@ void Expression_List::debug_print(){
     std::cout<<"Value : "<<this->value<<'\n';
     std::cout<<"Position : "<<this->position<<'\n';
     std::cout<<"Index : "<<this->index<<'\n';
-    std::cout<<"Priority : "<<this->priority<<'\n';
+    std::cout<<"Priority : "<<this->priority<<"\n\n";
 }
 
 void Expression_List::manage_list(long double value, unsigned beg_pos, unsigned end_pos){
@@ -213,8 +213,10 @@ long double Math::pow_(long double a, long double p){
 }
 
 long double Math::fact_(long double a, long double b){
-    if(a<0){ throw Exception("Minus factorial!"); }
+    if(a<0){ throw Exception("Incalculatable factorial!"); }
+    if(a==0){ return 1; }
     int ia=static_cast<int>(a);
+    if(a-ia!=0){ throw Exception("Incalculatable factorial!"); }
     for(unsigned i=ia-1;i>0;--i){ ia*=i; }
     return ia;
 }
@@ -286,7 +288,7 @@ void Calculator::init_list(const std::string& expr){
             pass=false;
             ++position;
         } else if(index!=22 && index!=23){
-            list->set_list(index,position,priority,index,Expression_List::create_node());
+            list->set_list(0,position,priority,index,Expression_List::create_node());
             list=list->get_next();
             pass=true;
             ++position;
@@ -322,51 +324,61 @@ bool Calculator::MeMeo_test() const{
 }
 
 long double Calculator::calculate(){
-    this->init_list(expr);
-    this->get_soe(0);
-    return this->list.get_value();
+    try{
+        this->init_list(expr);
+        this->get_soe();
+        return this->list.get_value();
+    } catch(Exception& exception){
+        throw exception;
+    }
 }
 
 long double Calculator::single_opr_calc(unsigned* pos, unsigned opr_pos){
     Expression_List* node=this->get_list();
     long double a, b=0;
     unsigned opr_index=0;
+    try{
     if(opr_pos==pos[0]){
         for(;node->get_position()!=opr_pos;node=node->get_next());
         a=node->get_next()->get_value();
         opr_index=node->get_index();
-        if(opr_index==0){ return a; }
+        if(opr_index==0 || opr_index==20){ return a; }
+        else if(opr_index==21){ return -1*a; }
         return operation_[opr_index-2](a,0);
-    } else if(opr_pos>pos[0] && pos[1]!=0){
+    } else if(opr_pos>pos[0] && pos[1]!=opr_pos){
         for(;node->get_position()!=pos[0];node=node->get_next());
         a=node->get_value();    node=node->get_next();
         opr_index=node->get_index();    node=node->get_next();
         b=node->get_value();
-        //std::cout<<"a : "<<a<<", b : "<<b<<", opr_index : "<<opr_index<<'\n';
         return operation_[opr_index-2](a,b);
     } else{
         for(;node->get_position()!=pos[0];node=node->get_next());
         a=node->get_value();
         opr_index=node->get_next()->get_index();
-        return operation_[opr_index](a,0);
+        return operation_[opr_index-2](a,0);
+    }
+    } catch(Exception& exception){
+        throw exception;
     }
 }
 
-void Calculator::get_soe(unsigned beg_pos){
+void Calculator::get_soe(){
     Expression_List* List=this->get_list();
     Expression_List* node=List;
     unsigned beg=0, *beg_end=&beg/*new unsigned[2]{0,0}*/, opr_index=0, pr=6;
     int pos=0;    bool pass=false;    long double elem=0;
     beg_end[0]=0;
+    try{
     while(pr!=0){
         elem=0;
         for(pr=6;pr>0;--pr){
-            if((pos=List->search_position(pr,beg_end[0]))==-1){ continue; }
+            if((pos=List->search_position(pr,beg=beg_end[0]))==-1){ continue; }
             node=List;
             for(int i=0;i<pos;++i){ node=node->get_next(); }
             beg_end=List->split(node->get_index(),pos);
             if(beg_end[1]-beg_end[0]<=2){
                 elem=single_opr_calc(beg_end,pos);
+                if(beg_end[0]==beg-1){ ++beg_end[0]; }
                 List->manage_list(elem,beg_end[0],beg_end[1]);
                 beg_end[0]=0;
                 ++pr; if(pass){ pr=7; } pass=false;
@@ -375,6 +387,8 @@ void Calculator::get_soe(unsigned beg_pos){
                 beg_end[0]++; break;
             }
         }
+    } } catch(Exception& exception){
+        throw exception;
     }
 }
 
