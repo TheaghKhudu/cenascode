@@ -56,9 +56,7 @@ int main(int argc, char** argv){
             if(perm){ str+="x["+to_string(j)+"]^"+to_string(C[j]); }
         }
         if(perm){ str+="*("+to_string(atof(argv[argc-1-jump]))+")+"; }
-        //cout<<"tmp : "<<tmp<<"\t,coef : "<<atof(argv[argc-1-jump])<<"\t,y : ";
         y+=(atof(argv[argc-1-jump])*tmp); tmp=1; ++jump;
-        //cout<<y<<"\n";
     }
     if(mult_v-z[0]<1){ goto WRITER; }
     HANDLER:
@@ -72,7 +70,6 @@ int main(int argc, char** argv){
         if(z[0]<mult_v){ goto HANDLER; }
     }
     //writing to the file
-    //cout<<"y = "<<y<<"\n";
     WRITER:
     k[0]=0; z[0]=1; for(unsigned i=0;i<mult_v;++i){ C[i]=0; }
     for(unsigned j=0;j<mult_v;++j){
