@@ -1,0 +1,76 @@
+<U>
+
+    General information:
+There is a P.O.C.L.(Probabilistic Operator Container List) to represent the probabilities of occurences of operators in
+the expression. With the help of this list we can decide which operator or operation to come more or less with many details.
+To generate a mathematical expression with 3 distinct levels of difficulty there is need to have 3 P.O.C. Lists as well.
+
+    The abstract working principle of the idea:
+There is an array named prob which has 23 elements. Each element defines the probability of occurence
+of an operator. It can only contain positive integers. And which numbers it should contain is defined after having all
+probabilities of pre-defined operators. So that, first, there is need to have probabilities of each and every operator
+individually or as groups. Then each probabilty of an individual should be added up to every probabily of an operator which
+comes after this one in the list. In this way, the P.O.C.L. is filled in a correct way.
+
+    For example:
+Suppose a generated expression should contain + and - 50%, * and / 25%, !/^/% 15%, and all others 10%. Then the probabilities
+each group is as follows:
+
+Group1: 0.5     Group2: 0.25    Group3: 0.15    Group4: 0.1
+Now, there is need to convert them to the probailities of individual operators:
++: 0.25         *: 0.125        !: 0.05         (: 1/150
+-: 0.25         /: 0.125        ^: 0.05         ): 1/150
+                                %: 0.05         log: 1/150
+                                                sin: 1/150
+                                                cos: 1/150
+                                                tan: 1/150
+                                                arcsin: 1/150
+                                                arccos: 1/150
+                                                arctan: 1/150
+                                                sinh: 1/150
+                                                cosh: 1/150
+                                                tanh: 1/150
+                                                arcsinh: 1/150
+                                                arccosh: 1/150
+                                                arctanh: 1/150
+Now, all the probabilites of individuals have to be converted to positive integers.
+And in order to do that we multiply them by their EKOB of denominators(600):
++: 150         *: 75        !: 30         (: 4
+-: 150         /: 75        ^: 30         ): 4
+                            %: 30         log: 4
+                                          sin: 4
+                                          cos: 4
+                                          tan: 4
+                                          arcsin: 4
+                                          arccos: 4
+                                          arctan: 4
+                                          sinh: 4
+                                          cosh: 4
+                                          tanh: 4
+                                          arcsinh: 4
+                                          arccosh: 4
+                                          arctanh: 4
+The last step is the addition:
+[Remember the operation list: (, ), log, arcsinh, arccosh, arctanh, arcsin, arccos, arctan, sinh, cosh, tanh, sin, cos, tan, ^,
+!, %, *, /, +, -, 1]
+P.O.C. List = 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 90, 120, 150, 225, 300, 450, 600
+
+    TASK:
+    -Create 3 different P.O.C.L. to represent 3 difficulty levels.
+    
+    Hit: Difficulty levels should be defined with the help normal human senses.
+    For example:
+    An expression is easy(or has difficulty level of 0) when:
+        -contains no parantheses(its 0% is (/))
+        -its ~50% is +/-
+        -its ~25% is *//
+        -its ~15% is ^/!/%
+        -its ~10% is others
+    An expression is normal(or has difficulty level of 1) when:
+        -contains no nested parantheses(but can contain repetitive parantheses)
+        -contains no nested operators(but can contain repetitive parantheses)
+        -its ~25% is +/-
+        -its ~25% is *//
+        -its ~25% is ^/!/%
+        -its ~25% is others
+    And so on.
