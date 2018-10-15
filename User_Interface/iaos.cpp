@@ -17,7 +17,7 @@ Updated:
     -first coming pre-addition/subtraction bug fixed (+1=1, -1=-1)
     -exceptional cases completed + new factorial exception added
 
-V1.3 /
+V1.3 /15.10.2018
 Updated:
     -power exception bug fixed ((-2)^3=-8)
     -factorial order bug fixed (5!+3)
