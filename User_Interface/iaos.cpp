@@ -16,6 +16,11 @@ Updated:
     -pre-addition/subtraction inside parantheses bug fixed ((+1)=1, (-1)=-1)
     -first coming pre-addition/subtraction bug fixed (+1=1, -1=-1)
     -exceptional cases completed + new factorial exception added
+
+V1.3 /
+Updated:
+    -power exception bug fixed ((-2)^3=-8)
+    -factorial order bug fixed (5!+3)
 */
 
 #include<cstdlib>
@@ -55,7 +60,7 @@ const unsigned Operation::order[MAX_NB_OPR][MAX_NB_RORD]={
     {0, 22, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M},
     {0, 22, M, M, M, M, M, M, M, M, M, M, M, M, M, M, M},
     {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 22, M, M},
-    {1, 16, 17, 18, 19, 20, 21, 22, M, M, M, M, M, M, M, M, M},
+    {1, 16, 17, 18, 19, 20, 21, M, M, M, M, M, M, M, M, M, M},
     {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 22, M, M},
     {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 22, M, M},
     {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 22, M, M},
@@ -208,7 +213,7 @@ long double Math::div_(long double a, long double b){
 }
 
 long double Math::pow_(long double a, long double p){
-    if(a<0){ throw Exception("Power error!"); }
+    if(a<0 && p!=static_cast<int>(p)){ throw Exception("Power error!"); }
     return pow(a,p);
 }
 
