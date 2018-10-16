@@ -124,14 +124,15 @@ class Calculator{
 
     long double calculate();
     //after getting "true" from MeMeo_test this function treats the expression as a mathematical expression
-    //and then calculates the expression, returns the final result of calculation
+    //and then calculates the expression with the help of get_soe, then returns the final result of calculation
 
     long double single_opr_calc(unsigned* pos, unsigned opr_index);
-    //solves the expression containing only and only single operation
+    //solves the expression containing only and only single operation or operator
 
-    void get_soe(unsigned beg_pos);
-    //recursive function which gets either the beginning and end postions of single operational expression
-    //or the final result itself and storing it in the first element of its array(which has only 2 elements)
+    void get_soe();
+    //non-recursive function which separates the expression into pieces that have only one operator
+    //then solves all pieces, puts them together in managed order in the list
+    //then repeats this process until the end, in the end only a value remains as the first element of list
 
     void debug_print() const;
     //displays all the variables clearly
